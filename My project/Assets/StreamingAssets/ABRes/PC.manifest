@@ -1,0 +1,10 @@
+ManifestFileVersion: 0
+CRC: 2663288618
+AssetBundleManifest:
+  AssetBundleInfos:
+    Info_0:
+      Name: luaassets
+      Dependencies: {}
+    Info_1:
+      Name: configassets
+      Dependencies: {}

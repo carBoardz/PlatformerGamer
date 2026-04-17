@@ -1,0 +1,12 @@
+{
+  "Id": 1001,
+  "Name": "Player",
+  "Level": 1,
+  "MaxHp": 100,
+  "Atk": 10,
+  "Def": 5,
+  "MoveSpeed": 5.0,
+  "RunSpeed": 8.0,
+  "JumpForce": 3.5,
+  "SkillIds": [1001, 1002, 1003]
+}
