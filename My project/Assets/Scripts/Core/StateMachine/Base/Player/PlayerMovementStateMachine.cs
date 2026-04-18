@@ -13,8 +13,6 @@ public class PlayerMovementStateMachine : MovementStateMachineBase
         _stateDict = new();
         if (_stateDict["PlayerIdleState"] != null)
             Initialize(_stateDict["PlayerIdleState"]);
-        else
-            Debug.LogError("PlayerIdleState²»´æÔÚ");
     }
     public void LuaRisterState(string StateName, LuaTable luaState)
     {

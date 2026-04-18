@@ -7,7 +7,7 @@ namespace MySinleton
     public class Singleton<T> where T : class, new()
     {
         static object _Lock = new object();
-        static T instance;
+        static volatile T instance;
         public static T Instance
         {
             get

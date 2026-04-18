@@ -1,23 +1,26 @@
 ManifestFileVersion: 0
-CRC: 2856540321
+CRC: 3001159825
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 8f2a628fd59d3416d15060bcccc4f45e
+    Hash: 865b8a2c575f06fcd58e244ca733b635
   TypeTreeHash:
     serializedVersion: 2
     Hash: 5ad585dd02dfb5016c0dad519eab8f49
   IncrementalBuildHash:
     serializedVersion: 2
-    Hash: 8f2a628fd59d3416d15060bcccc4f45e
+    Hash: 865b8a2c575f06fcd58e244ca733b635
 HashAppended: 0
 ClassTypes:
 - Class: 49
   Script: {instanceID: 0}
 SerializeReferenceClassIdentifiers: []
 Assets:
-- Assets/Resource/HotRes/bytes/LuaBytes/Player/PlayerDate.lua.bytes
 - Assets/Resource/HotRes/bytes/LuaBytes/LuaMain.lua.bytes
+- Assets/Resource/HotRes/bytes/LuaBytes/Player/State/PlayerWalk_RunState.lua.bytes
+- Assets/Resource/HotRes/bytes/LuaBytes/Player/State/PlayerIdleState.lua.bytes
+- Assets/Resource/HotRes/bytes/LuaBytes/Player/State/PlayerCrouchState.lua.bytes
+- Assets/Resource/HotRes/bytes/LuaBytes/Player/Date/PlayerDate.lua.bytes
 - Assets/Resource/HotRes/bytes/LuaBytes/Common/SplitTools.lua.bytes
 - Assets/Resource/HotRes/bytes/LuaBytes/Common/Object.lua.bytes
 - Assets/Resource/HotRes/bytes/LuaBytes/Common/JsonUtility.lua.bytes

@@ -6,7 +6,7 @@ namespace MySinleton
 {
     public class SingletonMono<T> : MonoBehaviour where T : MonoBehaviour
     {
-        static T instance;
+        static volatile T instance;
         private static readonly object _lock = new object();
         private static bool isDestroyed = false;
         public static T Instance

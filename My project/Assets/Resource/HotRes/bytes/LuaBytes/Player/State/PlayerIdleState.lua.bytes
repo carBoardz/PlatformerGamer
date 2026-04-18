@@ -1,0 +1,47 @@
+PlayerIdleState = {}
+PlayerIdleState.__index = PlayerIdleState
+
+function PlayerIdleState.new()
+	local self = setmetatable({}, PlayerIdleState)
+	csharp.stateMachine:LuaRisterState("PlayerIdleState", self)
+	return self
+end
+
+function PlayerIdleState:Enter( )
+	local csharp = self.self
+	csharp:OnBufferComplete()
+end
+
+function PlayerIdleState:Exit( )
+	
+end
+
+function PlayerIdleState:OnUpdate( )
+	local csharp = self.self
+    -- 对应 C# 的 base.OnBufferComplete();
+	csharp:OnBufferComplete()
+
+	-- 对应 C# 的 if (controller.HasMoveInput)
+	if csharp.controller.HasMoveInput then
+	    -- 有蹲伏输入
+	    if csharp.controller.HasCrouchInput then
+	        -- 有奔跑输入 → 蹲伏慢跑
+	        if csharp.controller.HasRunInput then
+	            csharp.stateMachine:SwitchState("PlayerCrouchState")
+	        end
+	    -- 无蹲伏输入，但有奔跑输入 → 普通慢跑
+	    elseif csharp.controller.HasRunInput then
+	        csharp.stateMachine:SwitchState("PlayerWalkState")
+	    end
+	end
+end
+
+function PlayerIdleState:OnFixedUpdate( )
+	
+end
+
+function PlayerIdleState:OnLateUpdate( )
+	
+end
+
+return PlayerIdleState
