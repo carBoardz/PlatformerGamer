@@ -40,6 +40,7 @@ public class PlayerController : CharacterControllerBase
         playerMovementStateMachine.UpdateTimer(Time.deltaTime);
         playerHotLogic.Update(Time.deltaTime);
 
+        //显示玩家状态
         currentState = playerMovementStateMachine.currentState;
         _currentStateName = currentState?.GetType().Name ?? "Null";
     }

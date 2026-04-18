@@ -1,22 +1,24 @@
-PlayerIdleState = {}
-PlayerIdleState.__index = PlayerIdleState
+PlayerCrouchState = {}
+PlayerCrouchState.__index = PlayerCrouchState
 
-function PlayerIdleState.new()
-	local self = setmetatable({}, PlayerIdleState)
-	csharp.stateMachine:LuaRisterState("PlayerIdleState", self)
+local csharp = self.self
+
+function PlayerCrouchState.new()
+	local self = setmetatable({}, PlayerCrouchState)
+	csharp.stateMachine:LuaRisterState("PlayerCrouchState", self)
 	return self
 end
 
-function PlayerIdleState:Enter( )
+function PlayerCrouchState:Enter( )
 	local csharp = self.self
 	csharp:OnBufferComplete()
 end
 
-function PlayerIdleState:Exit( )
+function PlayerCrouchState:Exit( )
 	
 end
 
-function PlayerIdleState:OnUpdate( )
+function PlayerCrouchState:OnUpdate( )
 	local csharp = self.self
     -- 对应 C# 的 base.OnBufferComplete();
 	csharp:OnBufferComplete()
@@ -36,12 +38,12 @@ function PlayerIdleState:OnUpdate( )
 	end
 end
 
-function PlayerIdleState:OnFixedUpdate( )
+function PlayerCrouchState:OnFixedUpdate( )
 	
 end
 
-function PlayerIdleState:OnLateUpdate( )
+function PlayerCrouchState:OnLateUpdate( )
 	
 end
 
-return PlayerIdleState
+return PlayerCrouchState

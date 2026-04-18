@@ -11,7 +11,10 @@ public class PlayerMovementStateMachine : MovementStateMachineBase
     public PlayerMovementStateMachine(PlayerController controller) :base(controller)
     {
         _stateDict = new();
-        //Initialize();
+        if (_stateDict["PlayerIdleState"] != null)
+            Initialize(_stateDict["PlayerIdleState"]);
+        else
+            Debug.LogError("PlayerIdleState²»´æÔÚ");
     }
     public void LuaRisterState(string StateName, LuaTable luaState)
     {

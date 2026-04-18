@@ -1,22 +1,22 @@
-PlayerIdleState = {}
-PlayerIdleState.__index = PlayerIdleState
+PlayerWalk_RunState = {}
+PlayerWalk_RunState.__index = PlayerWalk_RunState
 
-function PlayerIdleState.new()
-	local self = setmetatable({}, PlayerIdleState)
-	csharp.stateMachine:LuaRisterState("PlayerIdleState", self)
+function PlayerWalk_RunState.new()
+	local self = setmetatable({}, PlayerWalk_RunState)
+	csharp.stateMachine:LuaRisterState("PlayerWalk_RunState", self)
 	return self
 end
 
-function PlayerIdleState:Enter( )
+function PlayerWalk_RunState:Enter( )
 	local csharp = self.self
 	csharp:OnBufferComplete()
 end
 
-function PlayerIdleState:Exit( )
+function PlayerWalk_RunState:Exit( )
 	
 end
 
-function PlayerIdleState:OnUpdate( )
+function PlayerWalk_RunState:OnUpdate( )
 	local csharp = self.self
     -- 对应 C# 的 base.OnBufferComplete();
 	csharp:OnBufferComplete()
@@ -36,12 +36,12 @@ function PlayerIdleState:OnUpdate( )
 	end
 end
 
-function PlayerIdleState:OnFixedUpdate( )
+function PlayerWalk_RunState:OnFixedUpdate( )
 	
 end
 
-function PlayerIdleState:OnLateUpdate( )
+function PlayerWalk_RunState:OnLateUpdate( )
 	
 end
 
-return PlayerIdleState
+return PlayerWalk_RunState
