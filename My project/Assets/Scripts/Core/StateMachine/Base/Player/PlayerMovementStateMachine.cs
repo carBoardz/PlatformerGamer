@@ -7,13 +7,12 @@ using XLua;
 
 public class PlayerMovementStateMachine : MovementStateMachineBase
 {
-    readonly Dictionary<string, IState> _stateDict;
+    public readonly Dictionary<string, IState> _stateDict;
     public PlayerMovementStateMachine(PlayerController controller) :base(controller)
     {
-        _stateDict = new();
-        if (_stateDict["PlayerIdleState"] != null)
-            Initialize(_stateDict["PlayerIdleState"]);
+        _stateDict = new();   
     }
+
     public void LuaRisterState(string StateName, LuaTable luaState)
     {
         var state = new LuaPlayerState(this, playerController,luaState);

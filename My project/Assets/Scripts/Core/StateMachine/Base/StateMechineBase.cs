@@ -5,7 +5,7 @@ using UnityEngine;
 public class StateMechineBase : IState
 {
     public IState currentState { get; private set; }
-    protected void Initialize(IState initState)
+    public void Initialize(IState initState)
     {
         currentState = initState;
         currentState.Enter();

@@ -35,7 +35,7 @@ public class GameEntry : SingletonMono<GameEntry>
         EventCenter.Instance.Trigger("Csharp_Managers_Ready");
         EventCenter.Instance.Trigger("LuaEnv_Ready");
 
-        Debug.Log("<color=green>🎮 游戏启动流程全部完成！</color>");
+        Debug.Log("<color=green> 游戏启动流程全部完成！</color>");
     }
 
     /// <summary>
@@ -66,7 +66,7 @@ public class GameEntry : SingletonMono<GameEntry>
         while (!loadLuaDone || !loadConfigDone || !loadPlayerDone)
             yield return null;
 
-        Debug.Log("<color=yellow> 核心AB包预加载完成：Lua + Config + Animation</color>");
+        Debug.Log("<color=yellow> 核心AB包预加载完成：Lua + Config + PlayerAB</color>");
     }
 
     protected override void OnApplicationQuit()
