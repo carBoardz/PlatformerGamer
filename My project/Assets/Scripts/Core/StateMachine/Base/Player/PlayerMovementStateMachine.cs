@@ -10,7 +10,9 @@ public class PlayerMovementStateMachine : MovementStateMachineBase
     public readonly Dictionary<string, IState> _stateDict;
     public PlayerMovementStateMachine(PlayerController controller) :base(controller)
     {
-        _stateDict = new();   
+        _stateDict = new();
+        if (_stateDict["PlayerIdleState"] != null)
+            Initialize(_stateDict["PlayerIdleState"]);
     }
 
     public void LuaRisterState(string StateName, LuaTable luaState)

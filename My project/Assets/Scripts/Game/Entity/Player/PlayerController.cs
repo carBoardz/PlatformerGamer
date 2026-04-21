@@ -51,9 +51,6 @@ public class PlayerController : CharacterControllerBase
 
         LuaMgr.Instance.Global.Set("PlayerCtrl", this);
         Debug.Log("PlayerCtrl 注入Lua成功");
-
-        if (playerMovementStateMachine._stateDict["PlayerIdleState"] != null)
-            playerMovementStateMachine.Initialize(playerMovementStateMachine._stateDict["PlayerIdleState"]);
     }
 
     private void OnDisable()

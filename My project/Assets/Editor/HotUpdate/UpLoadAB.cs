@@ -11,7 +11,6 @@ using UnityEngine.Networking;
 
 public class UpLoadAB : MonoBehaviour
 {
-
     [MenuItem("AB包工具/上传热更文件")]
     public static void UpLoadFile()
     {

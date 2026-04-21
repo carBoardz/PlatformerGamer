@@ -248,11 +248,18 @@ namespace Tool.MyAB
                 return;
             }
 
-            LoadResAsync(abName, resName, typeof(TextAsset),(obj) =>
+            LoadResAsync(abName, resName, typeof(TextAsset), (obj) =>
             {
                 string text = "";
                 if (obj is TextAsset ta) text = ta.text;
                 callback?.Invoke(text);
+            });
+        }
+        public void LoadSceneConfigAsync(string abName, string soName, UnityAction<SceneConfigSO> callback)
+        {
+            LoadResAsync(abName, soName, typeof(SceneConfigSO), (obj) =>
+            {
+                callback?.Invoke(obj as SceneConfigSO);
             });
         }
         async Task<object> LoadResTask(string abName, string resName, System.Type type, UnityAction<object> callback)
