@@ -1,8 +1,10 @@
-﻿using System.Collections;
+﻿using MySinleton;
+using System;
+using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
-using MySinleton;
 using Tool.MyAB;
+using UnityEditor;
+using UnityEngine;
 
 /// <summary>
 /// 游戏唯一总入口
@@ -24,6 +26,23 @@ public class GameEntry : SingletonMono<GameEntry>
 
     private IEnumerator Start()
     {
+        // 第一步：检测资源更新
+        ABUpdateManager.Instance.DownLoadCompareFile(async success =>
+        {
+            if (success)
+                await ABUpdateManager.Instance.CheckUpdate((success) =>
+                {
+                    if (success)
+                        Debug.Log("资源下载成功");
+                    else
+                        Debug.LogError("资源下载失败");
+                }, (Progress) =>
+                {
+
+                });
+        });
+        
+
         // 第二步：异步预加载所有核心AB包（统一管理）
         yield return PreloadCoreAssetBundles();
 

@@ -27,6 +27,8 @@ namespace Tool.MyAB
         Dictionary<string, ABInfo> localABInfo = new Dictionary<string, ABInfo>();
         //待下载列表
         List<string> downLoadList = new List<string>();
+        public long totalBytes;
+        public long downloadedBytes;
 
         // 服务器基础地址
         private string _serverBaseUrl = "http://26.166.242.49:8000/ABRes/";
@@ -38,6 +40,7 @@ namespace Tool.MyAB
         string _remoteComparePath => "ABCompareInfo_temp.txt";
         //主线程回调队列
         readonly Queue<Action> _mainThreadActions = new Queue<Action>();
+
         protected override void Awake()
         {
             base.Awake();
@@ -71,8 +74,8 @@ namespace Tool.MyAB
                 {
                     if (res.StatusCode == HttpStatusCode.OK)
                     {
-                        long totalBytes = res.ContentLength;
-                        long downloadedBytes = 0;
+                        long fileTotalBytes = res.ContentLength;
+
                         using (Stream downlodeStream = res.GetResponseStream())
                         using (FileStream fileStream = File.Create(savePath))
                         {
@@ -83,7 +86,7 @@ namespace Tool.MyAB
                                 fileStream.Write(buffer, 0, contentLength);
                                 //获取下载进度
                                 downloadedBytes += contentLength;
-                                float progress = totalBytes <= 0 ? 0 : (float)downloadedBytes / totalBytes;
+                                float DownLoadProgress = totalBytes <= 0 ? 0 : (float)downloadedBytes / totalBytes;
 
                                 if (progressCallback != null)
                                 {
@@ -91,7 +94,7 @@ namespace Tool.MyAB
                                     {
                                         _mainThreadActions.Enqueue(() =>
                                         {
-                                            progressCallback.Invoke(downloadedBytes, totalBytes, progress);
+                                            progressCallback.Invoke(downloadedBytes, totalBytes, DownLoadProgress);
                                         });
                                     }
                                 }
@@ -176,14 +179,14 @@ namespace Tool.MyAB
                 {
                     await Task.Run(() =>
                     {
-                        isFileSuccess = DownLoadFild(downLoadList[i], (downloadedBytes, totalBytes, progress) =>
+                        isFileSuccess = DownLoadFild(downLoadList[i], (downloadedBytes, totalBytes, DownLoadProgress) =>
                         {
-                            progressCallback?.Invoke(progress);
+                            progressCallback?.Invoke(DownLoadProgress);
                         });
                     });
                     if (isFileSuccess)
                     {
-                        HaveBeenDownLoaded.Add(name);
+                        HaveBeenDownLoaded.Add(downLoadList[i]);
                         continue;
                     }
                     // 主线程更新完成数
@@ -220,7 +223,7 @@ namespace Tool.MyAB
         }
         #endregion
         #region Parse解析
-        public async Task CheckUpdate(UnityAction<object> callback)
+        public async Task CheckUpdate(UnityAction<bool> callback = null, UnityAction<float> progressCallback = null)
         {
             string localComparePath = Path.Combine(_streamingABPath, _localComparePath);
             if (Application.platform == RuntimePlatform.Android)
@@ -257,11 +260,13 @@ namespace Tool.MyAB
                                 if (!localABInfo.ContainsKey(name))
                                 {
                                     downLoadList.Add(name);
+                                    totalBytes += remoteABInfo[name].size;
                                 }
                                 else if (localABInfo[name].md5 != remoteABInfo[name].md5)
                                 {
                                     downLoadList.Add(name);
                                     localABInfo.Remove(name);
+                                    totalBytes += remoteABInfo[name].size;
                                 }
                             }
                             CleanObsoleteRes();
@@ -274,7 +279,10 @@ namespace Tool.MyAB
                                     File.WriteAllText(localComparePath, remoteContent);
                                 }
                                 callback?.Invoke(DownLoadSuccess);
-                            }, null);
+                            }, (DownLoadProgress) =>
+                            {
+                                progressCallback?.Invoke(DownLoadProgress);
+                            });
                         }
                         else
                         {

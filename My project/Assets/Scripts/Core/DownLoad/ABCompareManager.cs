@@ -50,10 +50,10 @@ public class ABCompareManager : SingletonMono<ABCompareManager>
     public string _remoteServerConfigPath;
 
     private LocalServerConfig _localConfig;
-    public void Awake()
-    {
-        _localVersionPath = Path.Combine(Application.persistentDataPath, "version.json");
-    }
+    //public void Awake()
+    //{
+    //    _localVersionPath = Path.Combine(Application.persistentDataPath, "version.json");
+    //}
 
     /// <summary>
     /// 对比：本地版本 VS 远程版本 → 返回是否需要更新

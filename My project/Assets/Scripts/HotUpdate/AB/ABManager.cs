@@ -215,6 +215,13 @@ namespace Tool.MyAB
         }
         #endregion
         #region 异步加载资源
+        /// <summary>
+        /// 异步加载 指定类型
+        /// </summary>
+        /// <param name="abName">包路径</param>
+        /// <param name="resName">主包名</param>
+        /// <param name="type">指定加载类型</param>
+        /// <param name="callback">回调传出加载结果</param>
         public void LoadResAsync(string abName, string resName, System.Type type, UnityAction<object> callback)
         {
             if (string.IsNullOrEmpty(abName) || string.IsNullOrEmpty(resName) || type == null)
@@ -262,6 +269,7 @@ namespace Tool.MyAB
                 callback?.Invoke(obj as SceneConfigSO);
             });
         }
+        #region LoadResTask的各种重载
         async Task<object> LoadResTask(string abName, string resName, System.Type type, UnityAction<object> callback)
         {
             object result = null;
@@ -366,6 +374,7 @@ namespace Tool.MyAB
                 callback?.Invoke(success);
             }
         }
+        #endregion
         //加载主包
         async Task<bool> LoadMainManifestAsync()
         {
