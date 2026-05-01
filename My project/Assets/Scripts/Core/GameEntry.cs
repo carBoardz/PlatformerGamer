@@ -36,9 +36,9 @@ public class GameEntry : SingletonMono<GameEntry>
                         Debug.Log("资源下载成功");
                     else
                         Debug.LogError("资源下载失败");
-                }, (Progress) =>
+                }, (downloadedBytes, totalBytes, DownLoadProgress) =>
                 {
-
+                    LoadingManager.Instance.UpdateProgress(downloadedBytes, totalBytes, DownLoadProgress);
                 });
         });
         
@@ -84,6 +84,8 @@ public class GameEntry : SingletonMono<GameEntry>
         // 等待全部加载完成
         while (!loadLuaDone || !loadConfigDone || !loadPlayerDone)
             yield return null;
+
+        UIConfigManager.Instance.InitConfig();
 
         Debug.Log("<color=yellow> 核心AB包预加载完成：Lua + Config + PlayerAB</color>");
     }

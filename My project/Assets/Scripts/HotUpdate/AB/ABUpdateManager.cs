@@ -154,7 +154,7 @@ namespace Tool.MyAB
         /// </summary>
         /// <param name="overCallback">下载完成回调</param>
         /// <param name="DownloadProgress">下载进度回调</param>
-        public async void DownLoadABFile(UnityAction<bool> overCallback = null, UnityAction<float> progressCallback = null)
+        public async void DownLoadABFile(UnityAction<bool> overCallback = null, UnityAction<long,long,float> progressCallback = null)
         {
             //检测对比本地资源，添加到待下载列表
             if (downLoadList.Count == 0)
@@ -181,7 +181,7 @@ namespace Tool.MyAB
                     {
                         isFileSuccess = DownLoadFild(downLoadList[i], (downloadedBytes, totalBytes, DownLoadProgress) =>
                         {
-                            progressCallback?.Invoke(DownLoadProgress);
+                            progressCallback?.Invoke(downloadedBytes, totalBytes, DownLoadProgress);
                         });
                     });
                     if (isFileSuccess)
@@ -223,7 +223,7 @@ namespace Tool.MyAB
         }
         #endregion
         #region Parse解析
-        public async Task CheckUpdate(UnityAction<bool> callback = null, UnityAction<float> progressCallback = null)
+        public async Task CheckUpdate(UnityAction<bool> callback = null, UnityAction<long,long,float> progressCallback = null)
         {
             string localComparePath = Path.Combine(_streamingABPath, _localComparePath);
             if (Application.platform == RuntimePlatform.Android)
@@ -279,9 +279,9 @@ namespace Tool.MyAB
                                     File.WriteAllText(localComparePath, remoteContent);
                                 }
                                 callback?.Invoke(DownLoadSuccess);
-                            }, (DownLoadProgress) =>
+                            }, (downloadedBytes, totalBytes, DownLoadProgress) =>
                             {
-                                progressCallback?.Invoke(DownLoadProgress);
+                                progressCallback?.Invoke(downloadedBytes, totalBytes, DownLoadProgress);
                             });
                         }
                         else

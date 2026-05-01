@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 6216424205296665480}
   - component: {fileID: 4424906100622180910}
   m_Layer: 5
-  m_Name: Loading
+  m_Name: UILoading
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -324,7 +324,7 @@ GameObject:
   - component: {fileID: 3125857163070735100}
   - component: {fileID: 5763441846365074413}
   m_Layer: 5
-  m_Name: Text (TMP)
+  m_Name: LoadingText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

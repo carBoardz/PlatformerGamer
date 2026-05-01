@@ -44,7 +44,7 @@ public class LuaPlayerState : IState
         _onFixedUpdate = _luaState.Get<Action>("OnFixedUpdate");
         _onLateUpdate = _luaState.Get<Action>("OnLateUpdate");
 
-        _luaState.Set("self", this);
+        _luaState.Set("csharp", this);
 
         Debug.Log("LuaPlayerState ×¢ÈëLua³É¹¦");
     }

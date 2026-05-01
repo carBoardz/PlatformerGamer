@@ -51,6 +51,12 @@ public class LuaMgr : SingletonMono<LuaMgr>
     {
         luaEnv.DoString($"require('{str}')");
     }
+    public LuaTable RequireModule(string luaPath)
+    {
+        // 执行require并返回Lua脚本return的表（Controller/Model）
+        return luaEnv.DoString($"return require('{luaPath}')")[0] as LuaTable;
+    }
+
     byte[] MyCustomLoader(ref string path)//自定义加载逻辑
     {
         if (ABManager.Instance != null)

@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "PreloadAssetSO", menuName = "游戏配置/单个AB包下载SO配置")]
+[CreateAssetMenu(fileName = "PreloadAssetSO", menuName = "创建SO/单个AB包下载SO配置")]
 public class PreloadAssetSO : ScriptableObject
 {
     [Header(" 需要对比的文件")]

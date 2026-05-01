@@ -1,5 +1,5 @@
 using UnityEngine;
-[CreateAssetMenu(menuName = "”Œœ∑≈‰÷√/SceneLoadEventS0")]
+[CreateAssetMenu(menuName = "¥¥Ω®SO/SceneLoadEventS0")]
 public class SceneConfigSO: ScriptableObject
 {
     public SceneType type;

@@ -1,39 +1,62 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Xml.Linq;
 using Tool.MyAB;
 using UnityEngine;
-using UnityEngine.SceneManagement;
+using UnityEngine.InputSystem.XR;
 using UnityEngine.UI;
+using XLua;
 
-public abstract class BaseView : MonoBehaviour
+public class BaseView : MonoBehaviour
 {
-    /// <summary>
-    /// 初始化View（加载AB包内的UI预制体）
-    /// </summary>
-    /// <param name="abName">UI所在AB包名称</param>
-    /// <param name="resName">UI预制体名称</param>
-    public virtual void InitView(string abName,string resName)
+    private Dictionary<string, Component> _widgets = new Dictionary<string, Component>();
+    public LuaTable _luaController { get; private set; }
+    public string UIName { get; set; }
+    public void BindLuaController(LuaTable controller, object userData = null)
     {
-        ABManager.Instance.LoadResAsync(abName, resName, typeof(object), (obj) =>
-        {
-            if (obj != null)
-            {
-                GameObject uiPrefab = obj as GameObject;
-                GameObject uiObj = Instantiate(uiPrefab, transform);
-            }
-        });
+        _luaController = controller;
+        
+        var luafunction = _luaController.Get<LuaFunction>("OnInit");
+        if (luafunction != null)
+            luafunction?.Call(_luaController, this, userData);
+        else
+            Debug.LogError($"Lua Controller for {gameObject.name} has no OnInit method!");
     }
-
     /// <summary>
     /// 绑定UI元素
     /// </summary>
-    protected abstract void BindView();
+    protected void BindView()
+    {
+        _luaController.Get<LuaFunction>("OnButtonClick")?.Call(_luaController);
+    }
+    void CollectWidgets()
+    {
+        _widgets.Clear();
+
+    }
     /// <summary>
     /// 刷新View视图
     /// </summary>
-    public abstract void RefreshView();
+    public void RefreshView()
+    {
+        _luaController.Get<LuaFunction>("RefreshView")?.Call(_luaController);
+    }
+    public void OnButtonClick(string btnName)
+    {
+        if (_luaController == null) return;
+        _luaController.Get<LuaFunction>("OnButtonClick")?.Call(_luaController, btnName);
+    }
+    public void CloseSelf()
+    {
+        UIManager.Instance.CloseUI(UIName);
+    }
     /// <summary>
     /// 释放View视图
     /// </summary>
-    public abstract void DisposeView();
+    public void DisposeView()
+    {
+        _luaController.Get<LuaFunction>("DisposeView")?.Call(_luaController);
+        _luaController?.Dispose();
+        _luaController = null;
+    }
 }

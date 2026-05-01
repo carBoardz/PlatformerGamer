@@ -11,12 +11,8 @@ public abstract class BaseController
         _model = model;
         _view = view;
         _model.InitModel();
-        _view.InitView(GetViewABName(), GetViewResName());
         _view.RefreshView();
     }
-
-    public abstract string GetViewABName();
-    public abstract string GetViewResName();
     public abstract string GetInitViewDate();
     /// <summary>
     /// 处理View交互事件
