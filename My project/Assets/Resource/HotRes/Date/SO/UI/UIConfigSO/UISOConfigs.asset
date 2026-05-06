@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ebe1789f9aac11f479aa210ebfe23da1, type: 3}
+  m_Name: UISOConfigs
+  m_EditorClassIdentifier: 
+  allUIConfigs:
+  - uiName: MainPanel
+    abName: configassets
+    controller: UI.MainPanelController
+    bindingConfig: MainPanelBinding
+  - uiName: UILoading
+    abName: configassets
+    controller: UI.UILoadingController
+    bindingConfig: UILoadingBinding

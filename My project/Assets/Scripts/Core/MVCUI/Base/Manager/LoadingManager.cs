@@ -11,7 +11,7 @@ using static UnityEditor.Experimental.GraphView.GraphView;
 
 public class LoadingManager : SingletonMono<LoadingManager>
 {
-    const string LoadingUIName = "LoadingPanel";
+    const string LoadingUIName = "StartGameLoadingPanelController";
     BaseView _loadingView;
     LuaTable _loadingLuaController;
 

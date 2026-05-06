@@ -67,6 +67,9 @@ public class UIManager : SingletonMono<UIManager>
         BaseView view = await LoadViewAsync(config);
         if (view == null) Debug.LogError("获取View对象失败");
 
+        //加载对应的BindingConfigSO
+        await view.PrepareWidgetsAsync(config);
+
         // 挂载到对应层级
         Mount(uiName, view, layer);
 
@@ -98,7 +101,7 @@ public class UIManager : SingletonMono<UIManager>
 
         var tcs = new TaskCompletionSource<BaseView>();
         // 缓存池没有 → 从AB包热更加载
-        ABManager.Instance.LoadResAsync(config.abName, config.prefabName, typeof(GameObject), (Obj) =>
+        ABManager.Instance.LoadResAsync(config.abName, config.uiName, typeof(GameObject), (Obj) =>
         {
             if (Obj != null)
             {

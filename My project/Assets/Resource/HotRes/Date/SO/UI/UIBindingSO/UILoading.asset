@@ -14,6 +14,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   uiName: UILoading
   bindings:
+  - widgetName: UILoading_Slider
+    widgetPath: 
+    componentType: Slider
+  - widgetName: LoadingText_TextMeshProUGUI
+    widgetPath: LoadingText
+    componentType: TextMeshProUGUI
   - widgetName: Background_Image
     widgetPath: Background
     componentType: Image

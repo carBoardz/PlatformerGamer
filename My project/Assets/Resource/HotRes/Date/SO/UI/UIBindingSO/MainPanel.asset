@@ -14,6 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   uiName: MainPanel
   bindings:
+  - widgetName: MainPanel_Image
+    widgetPath: 
+    componentType: Image
   - widgetName: Scrollbar_Image
     widgetPath: Scrollbar
     componentType: Image
@@ -29,15 +32,24 @@ MonoBehaviour:
   - widgetName: StartButton_Button
     widgetPath: StartButton
     componentType: Button
+  - widgetName: Text (TMP)_TextMeshProUGUI
+    widgetPath: StartButton/Text (TMP)
+    componentType: TextMeshProUGUI
   - widgetName: SettingButton_Image
     widgetPath: SettingButton
     componentType: Image
   - widgetName: SettingButton_Button
     widgetPath: SettingButton
     componentType: Button
+  - widgetName: Text (TMP)_TextMeshProUGUI
+    widgetPath: SettingButton/Text (TMP)
+    componentType: TextMeshProUGUI
   - widgetName: ExitButton_Image
     widgetPath: ExitButton
     componentType: Image
   - widgetName: ExitButton_Button
     widgetPath: ExitButton
     componentType: Button
+  - widgetName: Text (TMP)_TextMeshProUGUI
+    widgetPath: ExitButton/Text (TMP)
+    componentType: TextMeshProUGUI

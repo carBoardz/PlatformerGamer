@@ -302,6 +302,7 @@ GameObject:
   - component: {fileID: 8332853662246790614}
   - component: {fileID: 8465647974465603997}
   - component: {fileID: 397287749285122217}
+  - component: {fileID: 1848197423951794866}
   m_Layer: 5
   m_Name: MainPanel
   m_TagString: Untagged
@@ -370,6 +371,18 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &1848197423951794866
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4859993743908258707}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cf25790ef2367994787032ec97bcc0c1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &5385584113769626929
 GameObject:
   m_ObjectHideFlags: 0

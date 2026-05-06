@@ -48,12 +48,3 @@ public class UIConfigManager : Singleton<UIConfigManager>
         IsConfigLoaded = false;
     }
 }
-
-[System.Serializable]
-public class UIConfigItem
-{
-    public string uiName;       // UI唯一名称
-    public string abName;       // 所在AB包
-    public string prefabName;   // 预制体名称
-    public string controller;   // 控制器全名（热更反射用）
-}

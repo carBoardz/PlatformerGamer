@@ -19,7 +19,6 @@ public class GroundCheck : MonoBehaviour
         {
             _startPosition = new Vector3(_startPosition.x, 0f, _startPosition.z);
         }
-
     }
     
 
