@@ -21,19 +21,22 @@ namespace XLua.CSObjectWrap
         {
 			ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
 			System.Type type = typeof(Tool.MyAB.ABManager);
-			Utils.BeginObjectRegister(type, L, translator, 0, 7, 0, 0);
+			Utils.BeginObjectRegister(type, L, translator, 0, 8, 1, 1);
 			
 			Utils.RegisterFunc(L, Utils.METHOD_IDX, "LoadRes", _m_LoadRes);
 			Utils.RegisterFunc(L, Utils.METHOD_IDX, "LoadResAsync", _m_LoadResAsync);
 			Utils.RegisterFunc(L, Utils.METHOD_IDX, "LoadABOnlyAsync", _m_LoadABOnlyAsync);
 			Utils.RegisterFunc(L, Utils.METHOD_IDX, "LoadTextAsync", _m_LoadTextAsync);
+			Utils.RegisterFunc(L, Utils.METHOD_IDX, "LoadSceneConfigAsync", _m_LoadSceneConfigAsync);
 			Utils.RegisterFunc(L, Utils.METHOD_IDX, "UnloadAB", _m_UnloadAB);
 			Utils.RegisterFunc(L, Utils.METHOD_IDX, "ClearAllABCache", _m_ClearAllABCache);
 			Utils.RegisterFunc(L, Utils.METHOD_IDX, "DebugListAllAssets", _m_DebugListAllAssets);
 			
 			
-			
-			
+			Utils.RegisterFunc(L, Utils.GETTER_IDX, "_abCache", _g_get__abCache);
+            
+			Utils.RegisterFunc(L, Utils.SETTER_IDX, "_abCache", _s_set__abCache);
+            
 			
 			Utils.EndObjectRegister(type, L, translator, null, null,
 			    null, null, null);
@@ -200,6 +203,36 @@ namespace XLua.CSObjectWrap
         }
         
         [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _m_LoadSceneConfigAsync(RealStatePtr L)
+        {
+		    try {
+            
+                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
+            
+            
+                Tool.MyAB.ABManager gen_to_be_invoked = (Tool.MyAB.ABManager)translator.FastGetCSObj(L, 1);
+            
+            
+                
+                {
+                    string _abName = LuaAPI.lua_tostring(L, 2);
+                    string _soName = LuaAPI.lua_tostring(L, 3);
+                    UnityEngine.Events.UnityAction<SceneConfigSO> _callback = translator.GetDelegate<UnityEngine.Events.UnityAction<SceneConfigSO>>(L, 4);
+                    
+                    gen_to_be_invoked.LoadSceneConfigAsync( _abName, _soName, _callback );
+                    
+                    
+                    
+                    return 0;
+                }
+                
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+            
+        }
+        
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
         static int _m_UnloadAB(RealStatePtr L)
         {
 		    try {
@@ -300,7 +333,36 @@ namespace XLua.CSObjectWrap
         
         
         
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _g_get__abCache(RealStatePtr L)
+        {
+		    try {
+                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
+			
+                Tool.MyAB.ABManager gen_to_be_invoked = (Tool.MyAB.ABManager)translator.FastGetCSObj(L, 1);
+                translator.Push(L, gen_to_be_invoked._abCache);
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+            return 1;
+        }
         
+        
+        
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _s_set__abCache(RealStatePtr L)
+        {
+		    try {
+                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
+			
+                Tool.MyAB.ABManager gen_to_be_invoked = (Tool.MyAB.ABManager)translator.FastGetCSObj(L, 1);
+                gen_to_be_invoked._abCache = (System.Collections.Generic.Dictionary<string, System.ValueTuple<UnityEngine.AssetBundle, int>>)translator.GetObject(L, 2, typeof(System.Collections.Generic.Dictionary<string, System.ValueTuple<UnityEngine.AssetBundle, int>>));
+            
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+            return 0;
+        }
         
 		
 		

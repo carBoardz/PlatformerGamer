@@ -1,23 +1,25 @@
-PlayerIdleState = {}
-PlayerIdleState.__index = PlayerIdleState
+require("LuaPlayerStateBase")
+LuaPlayerStateBase:subClass("PlayerIdleState")
 
-function PlayerIdleState.new()
-	local self = setmetatable({}, PlayerIdleState)
-	csharp.stateMachine:LuaRisterState("PlayerIdleState", self)
-	return self
+function PlayerIdleState:new()
+	local obj = self.base.new(self)
+	csharp.stateMachine:LuaRisterState("PlayerIdleState", obj)
+	return obj
 end
 
 function PlayerIdleState:Enter( )
-	local csharp = self.self
+	self.base.Enter(self)
+	local csharp = self.csharp
 	csharp:OnBufferComplete()
 end
 
 function PlayerIdleState:Exit( )
-	
+	self.base.Exit(self)
 end
 
 function PlayerIdleState:OnUpdate( )
-	local csharp = self.self
+	self.base.OnUpdate(self)
+	local csharp = self.csharp
     -- 对应 C# 的 base.OnBufferComplete();
 	csharp:OnBufferComplete()
 
@@ -37,11 +39,11 @@ function PlayerIdleState:OnUpdate( )
 end
 
 function PlayerIdleState:OnFixedUpdate( )
-	
+	self.base.OnFixedUpdate(self)
 end
 
 function PlayerIdleState:OnLateUpdate( )
-	
+	self.base.OnLateUpdate(self)
 end
 
 return PlayerIdleState

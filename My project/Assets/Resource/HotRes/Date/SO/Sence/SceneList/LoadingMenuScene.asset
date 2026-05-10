@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: LoadingMenuScene
   m_EditorClassIdentifier: 
   type: 1
-  SceneABName: LoadingMenuScene
+  SceneName: LoadingMenu
   Scene: {fileID: 102900000, guid: 9fc0d4010bbf28b4594072e72b8655ab, type: 3}

@@ -6,7 +6,6 @@ using Tool.MyAB;
 using UnityEngine;
 using UnityEngine.UI;
 using XLua;
-using static UnityEditor.Experimental.GraphView.GraphView;
 
 /// <summary>
 /// 【单一职责】仅管理UI的打开/关闭/缓存，不碰AB，不解析配置
@@ -173,6 +172,11 @@ public class UIManager : SingletonMono<UIManager>
             _uiPool[uiName] = new Queue<BaseView>();
         }
         _uiPool[uiName].Enqueue(view);
+    }
+    public void ClearAll()
+    {
+        _openedUI.Clear();
+        _uiPool.Clear();
     }
 }
 public enum UILayer

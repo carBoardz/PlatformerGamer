@@ -1,24 +1,24 @@
-PlayerCrouchState = {}
-PlayerCrouchState.__index = PlayerCrouchState
+require("PlayerCrouchState")
+LuaPlayerStateBase:subClass("PlayerCrouchState")
 
-local csharp = self.self
-
-function PlayerCrouchState.new()
-	local self = setmetatable({}, PlayerCrouchState)
-	csharp.stateMachine:LuaRisterState("PlayerCrouchState", self)
-	return self
+function PlayerCrouchState:new()
+	local obj = self.base.new(self)
+	csharp.stateMachine:LuaRisterState("PlayerCrouchState", obj)
+	return obj
 end
 
 function PlayerCrouchState:Enter( )
+	self.base.Enter(self)
 	local csharp = self.self
 	csharp:OnBufferComplete()
 end
 
 function PlayerCrouchState:Exit( )
-	
+	self.base.Exit(self)
 end
 
 function PlayerCrouchState:OnUpdate( )
+	self.base.OnUpdate(self)
 	local csharp = self.self
     -- 对应 C# 的 base.OnBufferComplete();
 	csharp:OnBufferComplete()
@@ -39,11 +39,11 @@ function PlayerCrouchState:OnUpdate( )
 end
 
 function PlayerCrouchState:OnFixedUpdate( )
-	
+	self.base.OnFixedUpdate(self)
 end
 
 function PlayerCrouchState:OnLateUpdate( )
-	
+	self.base.OnLateUpdate(self)
 end
 
 return PlayerCrouchState

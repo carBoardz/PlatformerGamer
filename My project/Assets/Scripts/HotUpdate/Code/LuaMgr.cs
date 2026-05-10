@@ -56,7 +56,30 @@ public class LuaMgr : SingletonMono<LuaMgr>
         // 执行require并返回Lua脚本return的表（Controller/Model）
         return luaEnv.DoString($"return require('{luaPath}')")[0] as LuaTable;
     }
+    public void Dispose()
+    {
+        if (luaEnv != null)
+        {
+            try
+            {
+                if (luaEnv.Global != null)
+                {
+                    luaEnv.Global.Set<string,EventCenter>("EventCenter", null);
+                }
 
+                luaEnv.Dispose();
+                Debug.Log("Lua 环境已正常释放");
+            }
+            catch (System.Exception e)
+            {
+                Debug.LogError($"Lua 环境释放过程中发生异常：{e.Message}");
+            }
+            finally
+            {
+                luaEnv = null;
+            }
+        }
+    }
     byte[] MyCustomLoader(ref string path)//自定义加载逻辑
     {
         if (ABManager.Instance != null)

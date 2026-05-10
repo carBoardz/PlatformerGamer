@@ -339,12 +339,16 @@ public class EventCenter : SingletonMono<EventCenter>
     {
 
     }
-    void OnApplicationQuit()
+    public void Clear()
     {
         _eventDict.Clear();
         objectPool.Clear();
         lock (_callbackQueueLock) _callbackDedupDict.Clear();
         lock (_callbackQueueLock) _singleCallbackQueue.Clear();
+    }
+    void OnApplicationQuit()
+    {
+        Clear();
     }
     #endregion
     #region ≈‰Ã◊π§æﬂ¿‡

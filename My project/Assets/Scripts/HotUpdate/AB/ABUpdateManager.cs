@@ -31,19 +31,21 @@ namespace Tool.MyAB
         public long downloadedBytes;
 
         // 服务器基础地址
-        private string _serverBaseUrl = "http://26.166.242.49:8000/ABRes/";
+        private string _serverBaseUrl = "http://localhost/ABRes/";
         // 本地热更目录
-        string _persistentABPath => Path.Combine(Application.persistentDataPath, "ABRes");
-        string _streamingABPath => Path.Combine(Application.streamingAssetsPath, "ABRes");
+        string _persistentABPath;
+        string _streamingABPath;
 
-        string _localComparePath => "ABCompareInfo.txt";
-        string _remoteComparePath => "ABCompareInfo_temp.txt";
+        string _localComparePath => "ABcompareInfo.bytes";
+        string _remoteComparePath => "ABcompareInfo.bytes";
         //主线程回调队列
         readonly Queue<Action> _mainThreadActions = new Queue<Action>();
 
         protected override void Awake()
         {
             base.Awake();
+            _persistentABPath = Path.Combine(Application.persistentDataPath, "ABRes");
+            _streamingABPath = Path.Combine(Application.streamingAssetsPath, "ABRes");
             // 初始化热更目录
             if (!Directory.Exists(_persistentABPath))
             {
@@ -147,7 +149,8 @@ namespace Tool.MyAB
                 }
             }
             if (isSuccess)
-                overCallback?.Invoke(isSuccess);
+                Debug.Log("<color=green>对比文件下载成功！</color>");
+            overCallback?.Invoke(isSuccess);
         }
         /// <summary>
         /// 下载待下载列表的资源
@@ -331,11 +334,12 @@ namespace Tool.MyAB
             try
             {
                 string[] str = compareContent.Split('|'); int n = str.Length;
-                string[] infos = null;
-                for (int i = 0; i < n; i++)
+                for (int i = 0; i < n; i += 3)
                 {
-                    infos = str[i].Split(" ");
-                    abInfoDict.Add(infos[0], new ABInfo(infos[0], infos[1], infos[2]));
+                    string name = str[i];
+                    string length = str[i + 1];
+                    string md5 = str[i + 2];
+                    abInfoDict.Add(name, new ABInfo(name, length, md5));
                 }
             }
             catch (Exception ex)

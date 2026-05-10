@@ -1,28 +1,34 @@
 ManifestFileVersion: 0
-CRC: 3001159825
+CRC: 1934136491
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 865b8a2c575f06fcd58e244ca733b635
+    Hash: 5b016457682795bebcdb4123e845c8e7
   TypeTreeHash:
     serializedVersion: 2
     Hash: 5ad585dd02dfb5016c0dad519eab8f49
   IncrementalBuildHash:
     serializedVersion: 2
-    Hash: 865b8a2c575f06fcd58e244ca733b635
+    Hash: 5b016457682795bebcdb4123e845c8e7
 HashAppended: 0
 ClassTypes:
 - Class: 49
   Script: {instanceID: 0}
 SerializeReferenceClassIdentifiers: []
 Assets:
+- Assets/Resource/HotRes/bytes/LuaBytes/UI/Binding/MainPanel_AutoBind.lua.bytes
 - Assets/Resource/HotRes/bytes/LuaBytes/LuaMain.lua.bytes
-- Assets/Resource/HotRes/bytes/LuaBytes/Player/State/PlayerWalk_RunState.lua.bytes
-- Assets/Resource/HotRes/bytes/LuaBytes/Player/State/PlayerIdleState.lua.bytes
-- Assets/Resource/HotRes/bytes/LuaBytes/Player/State/PlayerCrouchState.lua.bytes
+- Assets/Resource/HotRes/bytes/LuaBytes/Player/State/luaPlayerStatesBase.lua.bytes
 - Assets/Resource/HotRes/bytes/LuaBytes/Player/Date/PlayerDate.lua.bytes
 - Assets/Resource/HotRes/bytes/LuaBytes/Common/SplitTools.lua.bytes
+- Assets/Resource/HotRes/bytes/LuaBytes/UI/StartGameLoading/StartGameLoadingPanelController.lua.bytes
+- Assets/Resource/HotRes/bytes/LuaBytes/Player/State/states/PlayerWalk_RunState.lua.bytes
+- Assets/Resource/HotRes/bytes/LuaBytes/UI/Binding/UILoading_AutoBind.lua.bytes
+- Assets/Resource/HotRes/bytes/LuaBytes/Player/State/states/PlayerIdleState.lua.bytes
 - Assets/Resource/HotRes/bytes/LuaBytes/Common/Object.lua.bytes
 - Assets/Resource/HotRes/bytes/LuaBytes/Common/JsonUtility.lua.bytes
+- Assets/Resource/HotRes/bytes/LuaBytes/UI/Binding/Prompt_AutoBind.lua.bytes
 - Assets/Resource/HotRes/bytes/LuaBytes/InitClass.lua.bytes
+- Assets/Resource/HotRes/bytes/LuaBytes/Player/State/states/PlayerCrouchState.lua.bytes
+- Assets/Resource/HotRes/bytes/LuaBytes/UI/LuaUIMVCBase.lua.bytes
 Dependencies: []

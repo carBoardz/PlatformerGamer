@@ -1,20 +1,117 @@
 ManifestFileVersion: 0
-CRC: 901724964
+CRC: 3652483121
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: a30d849d2cd1cf66b681805307709ef9
+    Hash: f58a50fad7bcd1e80e66086089f1497c
   TypeTreeHash:
     serializedVersion: 2
-    Hash: 5ad585dd02dfb5016c0dad519eab8f49
+    Hash: 2006cd2f3511d387b74c18d1cd49ae9a
   IncrementalBuildHash:
     serializedVersion: 2
-    Hash: a30d849d2cd1cf66b681805307709ef9
+    Hash: f58a50fad7bcd1e80e66086089f1497c
 HashAppended: 0
 ClassTypes:
+- Class: 1
+  Script: {instanceID: 0}
+- Class: 21
+  Script: {instanceID: 0}
+- Class: 28
+  Script: {instanceID: 0}
+- Class: 48
+  Script: {instanceID: 0}
 - Class: 49
   Script: {instanceID: 0}
-SerializeReferenceClassIdentifiers: []
+- Class: 114
+  Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 67db9e8f0e2ae9c40bc1e2b64352a6b4, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 2a4db7a114972834c8e4117be1d82ba3, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: cf25790ef2367994787032ec97bcc0c1, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 38648d011538d794a90d0e233afe57f6, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 71c1514a6bd24e1e882cebbe1904ce04, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: ebe1789f9aac11f479aa210ebfe23da1, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 55972cf20c36d5f45ade69814a435667, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 9c59c050d1d8142499fa7e71a0ba8bee, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 37497bfa734abcb4ea0948d2f7185f4c, type: 3}
+- Class: 115
+  Script: {instanceID: 0}
+- Class: 128
+  Script: {instanceID: 0}
+- Class: 213
+  Script: {instanceID: 0}
+- Class: 222
+  Script: {instanceID: 0}
+- Class: 224
+  Script: {instanceID: 0}
+SerializeReferenceClassIdentifiers:
+- AssemblyName: Assembly-CSharp
+  ClassName: UIConfigItem
+- AssemblyName: Unity.TextMeshPro
+  ClassName: TMPro.FaceInfo_Legacy
+- AssemblyName: Unity.TextMeshPro
+  ClassName: TMPro.FontAssetCreationSettings
+- AssemblyName: Unity.TextMeshPro
+  ClassName: TMPro.KerningTable
+- AssemblyName: Unity.TextMeshPro
+  ClassName: TMPro.TMP_Character
+- AssemblyName: Unity.TextMeshPro
+  ClassName: TMPro.TMP_FontFeatureTable
+- AssemblyName: Unity.TextMeshPro
+  ClassName: TMPro.TMP_FontWeightPair
+- AssemblyName: Unity.TextMeshPro
+  ClassName: TMPro.TMP_GlyphAdjustmentRecord
+- AssemblyName: Unity.TextMeshPro
+  ClassName: TMPro.TMP_GlyphPairAdjustmentRecord
+- AssemblyName: Unity.TextMeshPro
+  ClassName: TMPro.TMP_GlyphValueRecord
+- AssemblyName: Unity.TextMeshPro
+  ClassName: TMPro.VertexGradient
+- AssemblyName: UnityEngine.CoreModule
+  ClassName: UnityEngine.Events.PersistentCallGroup
+- AssemblyName: UnityEngine.TextCoreFontEngineModule
+  ClassName: UnityEngine.TextCore.FaceInfo
+- AssemblyName: UnityEngine.TextCoreFontEngineModule
+  ClassName: UnityEngine.TextCore.Glyph
+- AssemblyName: UnityEngine.TextCoreFontEngineModule
+  ClassName: UnityEngine.TextCore.GlyphMetrics
+- AssemblyName: UnityEngine.TextCoreFontEngineModule
+  ClassName: UnityEngine.TextCore.GlyphRect
+- AssemblyName: UnityEngine.UI
+  ClassName: UnityEngine.UI.AnimationTriggers
+- AssemblyName: UnityEngine.UI
+  ClassName: UnityEngine.UI.Button/ButtonClickedEvent
+- AssemblyName: UnityEngine.UI
+  ClassName: UnityEngine.UI.ColorBlock
+- AssemblyName: UnityEngine.UI
+  ClassName: UnityEngine.UI.MaskableGraphic/CullStateChangedEvent
+- AssemblyName: UnityEngine.UI
+  ClassName: UnityEngine.UI.Navigation
+- AssemblyName: UnityEngine.UI
+  ClassName: UnityEngine.UI.Scrollbar/ScrollEvent
+- AssemblyName: UnityEngine.UI
+  ClassName: UnityEngine.UI.Slider/SliderEvent
+- AssemblyName: UnityEngine.UI
+  ClassName: UnityEngine.UI.SpriteState
 Assets:
-- Assets/Resource/HotRes/bytes/ConfigBytes/PlayerDate.json.bytes
+- Assets/Resource/HotRes/Date/SO/ABSO/PreloadAssetSO.asset
+- Assets/Resource/HotRes/bytes/ConfigBytes/bytes/PlayerDate.json.bytes
+- Assets/Resource/HotRes/Date/bytes/PlayerDate.json
+- Assets/Prefab/ui/UIRoot/Top/Prompt.prefab
+- Assets/Prefab/ui/UIRoot/Normal/MainPanel.prefab
+- Assets/Prefab/ui/UIRoot/Normal/UILoading.prefab
+- Assets/Resource/HotRes/Date/SO/UI/UIConfigSO/UISOConfigs.asset
+- Assets/Resource/HotRes/Date/SO/Sence/SceneListConfig.asset
 Dependencies: []

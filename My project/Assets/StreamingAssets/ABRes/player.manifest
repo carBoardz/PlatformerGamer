@@ -1,20 +1,22 @@
 ManifestFileVersion: 0
-CRC: 2927058870
+CRC: 2570362247
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 36d5bd901209c71bb0af62faabfd1842
+    Hash: d85295429713a8a35d650975cf8607e5
   TypeTreeHash:
     serializedVersion: 2
-    Hash: e422a73b4511c0e6dd16f04435cec9ce
+    Hash: 424fe606431f36b6a08f2671c0fe9069
   IncrementalBuildHash:
     serializedVersion: 2
-    Hash: 36d5bd901209c71bb0af62faabfd1842
+    Hash: d85295429713a8a35d650975cf8607e5
 HashAppended: 0
 ClassTypes:
 - Class: 1
   Script: {instanceID: 0}
 - Class: 4
+  Script: {instanceID: 0}
+- Class: 20
   Script: {instanceID: 0}
 - Class: 21
   Script: {instanceID: 0}
@@ -32,10 +34,16 @@ ClassTypes:
   Script: {instanceID: 0}
 - Class: 95
   Script: {instanceID: 0}
+- Class: 114
+  Script: {fileID: 11500000, guid: 506d39bbe736c0448a4f31478b8751bb, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: af1993ab29f4647458a26b128850f015, type: 3}
+- Class: 115
+  Script: {instanceID: 0}
 - Class: 137
   Script: {instanceID: 0}
 SerializeReferenceClassIdentifiers: []
 Assets:
 - Assets/FemaleRunnerAnimset/Controllers/Base/Movements/PlayerBaseMovementController.controller
-- Assets/FemaleRunnerAnimset/Humanoid_Bot/Prefab/Humanoid_F.prefab
+- Assets/Prefab/Character/Humanoid_Bot/Prefab/Player.prefab
 Dependencies: []

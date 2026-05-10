@@ -446,10 +446,20 @@ namespace Tool.MyAB
             string abPath = GetABRealPath(abName);
             var abRequest = AssetBundle.LoadFromFileAsync(abPath);
             await AsyncHealper.AwaitAsyncOperation(abRequest);
-
+            Debug.Log($"{abPath}加载成功");
             AssetBundle ab = abRequest.assetBundle;
             if (ab == null)
             {
+                AssetBundle _ab = AssetBundle.LoadFromFile(@"C:\Users\Administrator\AppData\LocalLow\DefaultCompany\My project\ABRes\luaassets");
+                if (_ab == null)
+                {
+                    // 读取文件头部前 7 字节查看是否是 UnityFS 魔术数字
+                    byte[] header = new byte[7];
+                    using (var fs = new FileStream(@"...", FileMode.Open, FileAccess.Read))
+                        fs.Read(header, 0, 7);
+                    string magic = System.Text.Encoding.ASCII.GetString(header);
+                    Debug.Log("文件头: " + magic); // 正常应为 "UnityFS"
+                }
                 Debug.LogError($"AB包{abName}加载失败（路径：{abPath}）");
                 return;
             }

@@ -1,23 +1,25 @@
-PlayerWalk_RunState = {}
-PlayerWalk_RunState.__index = PlayerWalk_RunState
+require("LuaPlayerStateBase")
+LuaPlayerStateBase:subClass("PlayerWalk_RunState")
 
-function PlayerWalk_RunState.new()
-	local self = setmetatable({}, PlayerWalk_RunState)
-	csharp.stateMachine:LuaRisterState("PlayerWalk_RunState", self)
-	return self
+function PlayerWalk_RunState:new()
+	local obj = self.base.new(self)
+	csharp.stateMachine:LuaRisterState("PlayerWalk_RunState", obj)
+	return obj
 end
 
 function PlayerWalk_RunState:Enter( )
-	local csharp = self.self
+	self.base.Enter(self)
+	local csharp = self.csharp
 	csharp:OnBufferComplete()
 end
 
 function PlayerWalk_RunState:Exit( )
-	
+	self.base.Exit(self)
 end
 
 function PlayerWalk_RunState:OnUpdate( )
-	local csharp = self.self
+	self.base.OnUpdate(self)
+	local csharp = self.csharp
     -- 对应 C# 的 base.OnBufferComplete();
 	csharp:OnBufferComplete()
 
@@ -37,11 +39,11 @@ function PlayerWalk_RunState:OnUpdate( )
 end
 
 function PlayerWalk_RunState:OnFixedUpdate( )
-	
+	self.base.OnFixedUpdate(self)
 end
 
 function PlayerWalk_RunState:OnLateUpdate( )
-	
+	self.base.OnLateUpdate(self)
 end
 
 return PlayerWalk_RunState

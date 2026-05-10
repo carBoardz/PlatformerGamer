@@ -7,7 +7,6 @@ using Tool.MyAB;
 using UnityEngine;
 using UnityEngine.UI;
 using XLua;
-using static UnityEditor.Experimental.GraphView.GraphView;
 
 public class LoadingManager : SingletonMono<LoadingManager>
 {

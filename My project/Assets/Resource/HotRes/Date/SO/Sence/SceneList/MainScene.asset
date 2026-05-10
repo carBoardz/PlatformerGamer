@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: MainScene
   m_EditorClassIdentifier: 
   type: 0
-  SceneABName: MainScene
+  SceneName: Main
   Scene: {fileID: 102900000, guid: abe511034e2c26c4d97e9dd2ab127d32, type: 3}
