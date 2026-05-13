@@ -12,7 +12,7 @@ public class ABCompare
 {
     static string ABResPath = "ABOutput";
     static string OutputPath = "Assets/Resource/HotRes/bytes";
-    const string FileName = "ABcompareInfo.bytes";
+    const string FileName = "ABcompareTempInfo.bytes";
     [MenuItem("AB包工具/创建对比文件")]
     public static void CreatABCompareFile()
     {

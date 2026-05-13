@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using Tool.MyAB;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using static UnityEngine.GridBrushBase;
 
 /// <summary>
 /// 游戏唯一总入口
@@ -19,30 +21,40 @@ public class GameEntry : SingletonMono<GameEntry>
     protected override void Awake()
     {
         base.Awake();
-        // 第一步：同步初始化所有管理器
+        // 同步初始化所有管理器
         InitManagers();
     }
 
-    private async Task Start()
+    private async void Start()
     {
-        bool needRestart = false;
-        // 第一步：检测资源更新
-        await CheckAndDownloadUpdates((ok) => needRestart = ok);
-
-        if (needRestart)
+        try
         {
-            GameRestart.Restart();
-            return;
+            // 第一步：加载Loading场景
+            await LoadStartupScene();
+
+            // 第二步：检测资源更新
+            bool needRestart = await CheckAndDownloadUpdates();
+            Debug.Log("needRestart:"+ needRestart);
+            if (needRestart)
+            {
+                GameRestart.Restart();
+                Debug.Log("资源下载完毕，游戏重启成功");
+                return;
+            }
+
+            // 第三步：异步预加载所有核心AB包（统一管理）
+            await PreloadCoreAndStartLua();
+
+            // 第四步：触发全局事件（所有准备就绪）
+            EventCenter.Instance.Trigger("Csharp_Managers_Ready");
+            EventCenter.Instance.Trigger("LuaEnv_Ready");
+
+            Debug.Log("<color=green> 游戏启动流程全部完成！</color>");
         }
-
-        // 第二步：异步预加载所有核心AB包（统一管理）
-        await PreloadCoreAndStartLua();
-
-        // 第三步：触发全局事件（所有准备就绪）
-        EventCenter.Instance.Trigger("Csharp_Managers_Ready");
-        EventCenter.Instance.Trigger("LuaEnv_Ready");
-
-        Debug.Log("<color=green> 游戏启动流程全部完成！</color>");
+        catch (Exception e)
+        {
+            Debug.LogException(e);
+        }
     }
 
     /// <summary>
@@ -53,6 +65,8 @@ public class GameEntry : SingletonMono<GameEntry>
         new GameObject("EventCenter").AddComponent<EventCenter>();
         new GameObject("ABMgr").AddComponent<ABManager>();
         new GameObject("LuaMgr").AddComponent<LuaMgr>();
+        new GameObject("LoadSceneMgr").AddComponent<LoadSceneMgr>();
+        new GameObject("UIManager").AddComponent<UIManager>();
     }
 
     /// <summary>
@@ -86,36 +100,57 @@ public class GameEntry : SingletonMono<GameEntry>
 
         Debug.Log("<color=yellow> 核心AB包预加载完成：Lua + Config + PlayerAB</color>");
     }
-
-    async Task CheckAndDownloadUpdates(System.Action<bool> onComplete)
+    private bool _isUpdating = false;
+    /// <summary>
+    /// 资源更新
+    /// </summary>
+    /// <returns></returns>
+    async Task<bool> CheckAndDownloadUpdates()
     {
-        var tcs = new TaskCompletionSource<bool>();
-        ABUpdateManager.Instance.DownLoadCompareFile(async success =>
+        if (_isUpdating)
+        {
+            Debug.LogWarning("更新已在执行");
+            return false;
+        }
+        _isUpdating = true;
+        
+        bool success = await ABUpdateManager.Instance.DownLoadCompareFile();
+
+        try
         {
             if (success)
             {
-                await ABUpdateManager.Instance.CheckUpdate((success) =>
-                {
-                    tcs.SetResult(true);
-                    onComplete?.Invoke(success);
-                }, (downloadedBytes, totalBytes, DownLoadProgress) =>
+                bool ok = await ABUpdateManager.Instance.CheckUpdate((downloadedBytes, totalBytes, DownLoadProgress) =>
                 {
                     LoadingManager.Instance.UpdateProgress(downloadedBytes, totalBytes, DownLoadProgress);
                 });
+                return ok;
             }
             else
             {
-                tcs.SetResult(true);
-                onComplete?.Invoke(false);
+                return false;
             }
-        });
-        await tcs.Task;
+        }
+        catch (Exception ex)
+        {
+            Debug.Log($"更新资源失败，原因：{ex}");
+            _isUpdating = false;
+            return false;
+        }
+    }
+    async Task LoadStartupScene()
+    {
+        var asyncOp = SceneManager.LoadSceneAsync(0);
+        asyncOp.allowSceneActivation = true;
+        while (!asyncOp.isDone)
+            await Task.Yield();
     }
 
     protected override void OnApplicationQuit()
     {
         base.OnApplicationQuit();
         // 游戏退出时统一释放资源
+        Debug.Log("OnApplicationQuit造成的AB包缓存清理");
         ABManager.Instance.ClearAllABCache();
     }
 }

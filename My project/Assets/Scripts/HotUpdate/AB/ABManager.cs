@@ -592,7 +592,11 @@ namespace Tool.MyAB
         }
         protected override void OnDestroy()
         {
-            ClearAllABCache();
+            if (IsValidSingleton == this)
+            {
+                Debug.Log("ABManager自身销毁造成的AB包缓存清理");
+                ClearAllABCache();
+            }
             base.OnDestroy();
         }
         /// <summary>

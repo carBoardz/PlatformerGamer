@@ -39,5 +39,3 @@ function StartGameLoadingPanelController:OnDestroy()
 end
 
 return StartGameLoadingPanelController
-
---测试

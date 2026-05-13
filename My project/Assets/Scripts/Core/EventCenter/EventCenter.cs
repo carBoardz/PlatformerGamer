@@ -349,6 +349,7 @@ public class EventCenter : SingletonMono<EventCenter>
     void OnApplicationQuit()
     {
         Clear();
+        Application.quitting -= OnApplicationQuit;
     }
     #endregion
     #region ≈‰Ã◊π§æﬂ¿‡

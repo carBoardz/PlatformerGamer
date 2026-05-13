@@ -10,13 +10,14 @@ public class LuaMgr : SingletonMono<LuaMgr>
 {
     LuaEnv luaEnv = null;
     string LuaMainName => "LuaMain.lua";
-    string _streamingPath => Path.Combine(Application.streamingAssetsPath, "ABRes");
-    string _persistentPath => Path.Combine(Application.persistentDataPath, "ABRes");
+    string _streamingPath;
+    string _persistentPath;
 
     protected override void Awake()
     {
         base.Awake();
-        Initialize();
+        _streamingPath = Path.Combine(Application.streamingAssetsPath, "ABRes");
+        _persistentPath = Path.Combine(Application.persistentDataPath, "ABRes");
     }
     public void Initialize()
     {

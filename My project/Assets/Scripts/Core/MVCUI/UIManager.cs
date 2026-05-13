@@ -21,8 +21,9 @@ public class UIManager : SingletonMono<UIManager>
     public Transform UIRoot_Popup { get; private set; }//µØ¥∞
     public Transform UIRoot_Top { get; private set; }//∂•≤øÃ· æ
 
-    public void Init()
+    protected override void Awake()
     {
+        base.Awake();
         _openedUI = new Dictionary<string, BaseView>();
         _uiPool = new Dictionary<string, Queue<BaseView>>();
         LoadUIFramework();
@@ -175,8 +176,14 @@ public class UIManager : SingletonMono<UIManager>
     }
     public void ClearAll()
     {
+        foreach (var uiName in _openedUI.Keys)
+        {
+            var view = _openedUI[uiName];
+            view.DisposeView();
+            view.gameObject.SetActive(false);
+            ReturnToPool(uiName, view);
+        }
         _openedUI.Clear();
-        _uiPool.Clear();
     }
 }
 public enum UILayer
