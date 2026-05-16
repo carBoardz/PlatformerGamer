@@ -26,7 +26,7 @@ public class UIManager : SingletonMono<UIManager>
         base.Awake();
         _openedUI = new Dictionary<string, BaseView>();
         _uiPool = new Dictionary<string, Queue<BaseView>>();
-        LoadUIFramework();
+        LoadUIFramework();//ui因为要一开始就需要加载所以比较特殊
     }
     /// <summary>
     /// 加载基础UI框架

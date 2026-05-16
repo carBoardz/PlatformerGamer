@@ -7,8 +7,11 @@ EventCenter:RegisterLua("LuaEnv_Ready", function()
     --local abMgr = CS.Tool.MyAB.ABManager.Instance
     print("ABMgr 实例：", abMgr)
     
-    local jsonName = "assets/resource/hotres/bytes/configbytes/playerdate.json.bytes"
-    abMgr:LoadTextAsync("configassets", jsonName, function(res)
+    local abName = "configassets"
+    local resName = "PlayerDate.json"
+    print("实际加载资源名：" .. resName)
+    
+    abMgr:LoadTextAsync(abName, resName, function(res)
         print("资源加载结果：", res)
         if res == nil then return end
         local data = Json.decode(res)

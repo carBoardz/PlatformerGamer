@@ -9,6 +9,8 @@ using UnityEngine;
 public class UIConfigManager : Singleton<UIConfigManager>
 {
     public Dictionary<string, UIConfigItem> _configCache = new();
+    const string abName = "configassets";
+    const string ResName = "UISOConfigs";
     public bool IsConfigLoaded { get; private set; }
 
     /// <summary>
@@ -16,7 +18,7 @@ public class UIConfigManager : Singleton<UIConfigManager>
     /// </summary>
     public void InitConfig()
     {
-        ABManager.Instance.LoadResAsync("configassets", "UIAllConfig", typeof(UIConfigItem), (so) =>
+        ABManager.Instance.LoadResAsync(abName, ResName, typeof(UISOConfigs), (so) =>
         {
             // Ω‚ŒˆSO£¨¥Ê»Î◊÷µ‰ª∫¥Ê
             _configCache.Clear();

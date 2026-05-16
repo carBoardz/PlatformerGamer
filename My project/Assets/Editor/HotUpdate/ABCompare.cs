@@ -11,7 +11,7 @@ using UnityEngine;
 public class ABCompare
 {
     static string ABResPath = "ABOutput";
-    static string OutputPath = "Assets/Resource/HotRes/bytes";
+    static string OutputPath = Path.Combine(Directory.GetParent(Application.dataPath).FullName, "ABOutput\\PC");
     const string FileName = "ABcompareTempInfo.bytes";
     [MenuItem("AB包工具/创建对比文件")]
     public static void CreatABCompareFile()
@@ -32,7 +32,7 @@ public class ABCompare
             }
         }
         string res = abCompareInfo.ToString().TrimEnd('|');
-        string savePath = Path.Combine(Application.dataPath, OutputPath.Replace("Assets/", ""), FileName);
+        string savePath = Path.Combine(OutputPath, FileName);
 
         File.WriteAllText(savePath, res);
         AssetDatabase.Refresh();

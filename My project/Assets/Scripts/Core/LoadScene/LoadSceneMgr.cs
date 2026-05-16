@@ -14,8 +14,8 @@ public class LoadSceneMgr : SingletonMono<LoadSceneMgr>
     public int currentIndex = -1;
     SceneListSO _SceneListConfig;
 
-    const string configName = "configassets";
-    const string ResName = "LevelListConfig";
+    const string abName = "configassets";
+    const string ResName = "SceneListConfig";
 
     protected override void Awake()
     {
@@ -28,7 +28,7 @@ public class LoadSceneMgr : SingletonMono<LoadSceneMgr>
     public void InitLevelList()
     {
         ABManager.Instance.LoadResAsync(
-            configName,
+            abName,
             ResName,
             typeof(SceneListSO),
             (obj) =>

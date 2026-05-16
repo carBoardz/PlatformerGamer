@@ -26,6 +26,10 @@ namespace Tool.MyAB
         bool _isLoadingMainManifest = false;
         public Dictionary<string, (AssetBundle ab, int refCount)> _abCache = new Dictionary<string, (AssetBundle ab, int refCount)>();
 
+        private readonly Dictionary<string, Task> _loadingTasks = new Dictionary<string, Task>();// 防并发字典：存储正在加载中的异步任务
+        private readonly object _loadingTasksLock = new object(); // 保护 _loadingTasks 的线程安全
+        private readonly object _syncLoadLock = new object(); // 保护 _loadingTasks 的线程安全
+
         private string _persistentPath; // 热更路径（persistentDataPath）
         private string _streamingPath;  // 默认路径（streamingAssetsPath）
 
@@ -160,36 +164,39 @@ namespace Tool.MyAB
         bool LoadSingleAB(string abName, out AssetBundle ab)
         {
             ab = null;
-            if (_abCache.TryGetValue(abName, out var abData))
+            lock (_syncLoadLock)
             {
-                int newCount = abData.refCount + 1;
-                Debug.Log($"AB包{abName}引用计数+1，当前：{newCount}");
-                _abCache[abName] = (abData.ab, newCount);
-                ab = abData.ab;
-                return true;
-            }
-
-            string abPath = GetABRealPath(abName);
-            if (string.IsNullOrEmpty(abPath))
-            {
-                Debug.LogError($"AB包{abName}路径不存在（热更：{_persistentPath}/{abName}，默认：{_streamingPath}/{abName}）");
-                return false;
-            }
-            else if (abPath.StartsWith("jar:file://"))
-            {
-                return false;
-            }
-            else
-            {
-                ab = AssetBundle.LoadFromFile(abPath);
-                if (ab != null)
+                if (_abCache.TryGetValue(abName, out var abData))
                 {
-                    Debug.Log($"AB包{abName}加载成功，引用计数初始化为1");
-                    _abCache.Add(abName, (ab, 1));
+                    int newCount = abData.refCount + 1;
+                    Debug.Log($"AB包{abName}引用计数+1，当前：{newCount}");
+                    _abCache[abName] = (abData.ab, newCount);
+                    ab = abData.ab;
                     return true;
                 }
+
+                string abPath = GetABRealPath(abName);
+                if (string.IsNullOrEmpty(abPath))
+                {
+                    Debug.LogError($"AB包{abName}路径不存在（热更：{_persistentPath}/{abName}，默认：{_streamingPath}/{abName}）");
+                    return false;
+                }
+                else if (abPath.StartsWith("jar:file://"))
+                {
+                    return false;
+                }
+                else
+                {
+                    ab = AssetBundle.LoadFromFile(abPath);
+                    if (ab != null)
+                    {
+                        Debug.Log($"AB包{abName}加载成功，引用计数初始化为1");
+                        _abCache.Add(abName, (ab, 1));
+                        return true;
+                    }
+                }
+                Debug.LogError($"AB包{abName}加载失败（路径：{abPath}）");
             }
-            Debug.LogError($"AB包{abName}加载失败（路径：{abPath}）");
             return false;
         }
         /// <summary>
@@ -230,6 +237,7 @@ namespace Tool.MyAB
                 callback?.Invoke(null);
                 return;
             }
+            Debug.Log($"abName:{abName}准备加载");
             _ = LoadResTask(abName, resName, type, callback);
         }
         /// <summary>
@@ -362,7 +370,8 @@ namespace Tool.MyAB
                 if (_abCache.ContainsKey(abName))
                 {
                     success = true;
-                    Debug.Log($"AB包 {abName} 预加载成功");
+                    Debug.Log($"AB包 {abName} 预加载成功，是否有效：{IsBundleHeaderValid(abName)}");
+                    //if (abName == "luaassets") DebugListAllAssets(abName);
                 }
             }
             catch (Exception ex)
@@ -436,38 +445,70 @@ namespace Tool.MyAB
                 return;
             }
 
-
-            if (string.IsNullOrEmpty(abName))
+            Task existingTask;
+            lock (_loadingTasksLock)
             {
-                Debug.LogError($"AB包{abName}路径不存在");
+                if (_loadingTasks.TryGetValue(abName, out existingTask))
+                {
+                    // 已有正在加载的任务，等待它完成即可
+                }
+                else
+                {
+                    // 没有则创建一个新的加载任务，并注册到字典
+                    existingTask = LoadSingleABInternalAsync(abName);
+                    _loadingTasks[abName] = existingTask;
+                }
+            }
+
+            try
+            {
+                await existingTask;
+            }
+            finally
+            {
+                // 任务完成后从字典移除
+                lock (_loadingTasksLock)
+                {
+                    _loadingTasks.Remove(abName);
+                }
+            }
+
+            if (_abCache.TryGetValue(abName, out var data))
+            {
+                int newCount = data.refCount + 1;
+                Debug.Log($"AB包{abName}引用计数+1，当前：{newCount}");
+                _abCache[abName] = (data.ab, newCount);
+            }
+            else
+            {
+                Debug.LogError($"AB包{abName}加载失败或未进入缓存");
+            }
+        }
+        #endregion
+        async Task LoadSingleABInternalAsync(string abName)
+        {
+            string abPath = GetABRealPath(abName);
+            
+            if (string.IsNullOrEmpty(abPath))
+            {
+                Debug.LogError($"AB包{abPath}路径不存在");
                 return;
             }
 
-            string abPath = GetABRealPath(abName);
             var abRequest = AssetBundle.LoadFromFileAsync(abPath);
             await AsyncHealper.AwaitAsyncOperation(abRequest);
             Debug.Log($"{abPath}加载成功");
             AssetBundle ab = abRequest.assetBundle;
+
             if (ab == null)
             {
-                AssetBundle _ab = AssetBundle.LoadFromFile(@"C:\Users\Administrator\AppData\LocalLow\DefaultCompany\My project\ABRes\luaassets");
-                if (_ab == null)
-                {
-                    // 读取文件头部前 7 字节查看是否是 UnityFS 魔术数字
-                    byte[] header = new byte[7];
-                    using (var fs = new FileStream(@"...", FileMode.Open, FileAccess.Read))
-                        fs.Read(header, 0, 7);
-                    string magic = System.Text.Encoding.ASCII.GetString(header);
-                    Debug.Log("文件头: " + magic); // 正常应为 "UnityFS"
-                }
                 Debug.LogError($"AB包{abName}加载失败（路径：{abPath}）");
                 return;
             }
 
-            _abCache.Add(abName, (ab, 1));
-            Debug.Log($"AB包{abName}加载成功，引用计数初始化为1");
+            _abCache.Add(abName, (ab, 0));
+            Debug.Log($"AB包{abName}加载成功，引用计数初始化为0");
         }
-        #endregion
         IEnumerator LoadAndroidStreamingResCoroutine(string abName, string resName, System.Type type, UnityAction<object> callback)
         {
             string path = GetABRealPath(abName);
@@ -613,6 +654,38 @@ namespace Tool.MyAB
                 {
                     Debug.Log(" - " + name);
                 }
+            }
+        }
+        /// <summary>
+        /// 检测AB包是否有效
+        /// </summary>
+        /// <param name="filePath">文件路径</param>
+        /// <returns></returns>
+        /// <summary>
+        /// 检测指定 AB 包文件头部是否为有效的 UnityFS 格式
+        /// </summary>
+        public bool IsBundleHeaderValid(string abName)
+        {
+            string filePath = GetABRealPath(abName);
+            if (string.IsNullOrEmpty(filePath)) return false;
+            // jar 协议路径无法用 FileStream 直接读取，跳过检测
+            if (filePath.StartsWith("jar:file://")) return false;
+            if (!File.Exists(filePath)) return false;
+
+            try
+            {
+                byte[] header = new byte[7];
+                using (var fs = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read))
+                {
+                    if (fs.Length < 7) return false;
+                    fs.Read(header, 0, 7);
+                }
+                string magic = System.Text.Encoding.ASCII.GetString(header, 0, 5);
+                return magic == "Unity" && header[5] == 'F' && header[6] == 'S'; // "UnityFS"
+            }
+            catch
+            {
+                return false;
             }
         }
         #region 事件委托

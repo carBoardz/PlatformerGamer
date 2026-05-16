@@ -168,78 +168,75 @@ namespace Tool.MyAB
             //检测对比本地资源，添加到待下载列表
             if (downLoadList.Count == 0)
             {
-                Debug.Log("所有AB包已是最新，无需下载");
+                Debug.Log("[DownLoadABFile] 所有AB包已是最新，无需下载");
                 return false;
             }
             //下载待下载列表中的资源
             int totalFileCount = downLoadList.Count;
             int waitToDownLoadCount = totalFileCount;
-            bool isFileSuccess = false; bool allSuccess = true;
 
             int completedFileCount = 0; // 已完成文件数
-            int retryCount = 5;//重新下载次数
-            List<string> HaveBeenDownLoaded = new List<string>();
+            var failedFiles = new List<string>();
 
-            while (waitToDownLoadCount > 0 && retryCount > 0)
+            //
+            for (int i = 0; i < waitToDownLoadCount; i++)
             {
-                isFileSuccess = false;
-                for (int i = 0; i < waitToDownLoadCount; i++)
+                int index = i;
+                string fileName = downLoadList[index];
+                int retryCount = 5;//重新下载次数
+                bool fileSuccess = false;
+
+                while (!fileSuccess && retryCount > 0)
                 {
-                    int index = i;
-                    await Task.Run(() =>
+                    try
                     {
-                        Debug.Log($"当前文件资源下载：{downLoadList[index]}");
-                        isFileSuccess = DownLoadFild(downLoadList[index], (downloadedBytes, totalBytes, DownLoadProgress) =>
+                        await Task.Run(() =>
                         {
-                            progressCallback?.Invoke(downloadedBytes, totalBytes, DownLoadProgress);
+                            Debug.Log($"[DownLoadABFile] 当前文件资源下载：{fileName}");
+                            fileSuccess = DownLoadFild(fileName, (downloadedBytes, totalBytes, DownLoadProgress) =>
+                            {
+                                progressCallback?.Invoke(downloadedBytes, totalBytes, DownLoadProgress);
+                            });
                         });
-                    });
-                    if (isFileSuccess)
+                    }
+                    catch (Exception ex)
                     {
-                        HaveBeenDownLoaded.Add(downLoadList[i]);
+                        Debug.LogError($"[DownLoadABFile] 下载 {fileName} 发生未处理异常: {ex}");
+                        fileSuccess = false;
+                    }
+
+                    if (fileSuccess)
+                    {
+                        completedFileCount++;
+                        Debug.Log($"[DownLoadABFile] {fileName}下载完成，已完成{completedFileCount}/{totalFileCount}");
+                        //HaveBeenDownLoaded.Add(downLoadList[i]);
                         continue;
                     }
-                    // 主线程更新完成数
-                    lock (_mainThreadActions)
+                    else
                     {
-                        _mainThreadActions.Enqueue(() =>
+                        retryCount--;
+                        if (retryCount > 0)
                         {
-                            if (isFileSuccess)
-                            {
-                                completedFileCount++;
-                                Debug.Log($"{downLoadList[i]}下载完成，已完成{completedFileCount}/{totalFileCount}");
-                            }
-                            else
-                            {
-                                allSuccess = false;
-                            }
-                        });
+                            Debug.LogWarning($"[DownLoadABFile] {fileName} 下载失败，剩余重试 {retryCount} 次");
+                            await Task.Delay(500); // 退避
+                        }
+                        else
+                        {
+                            Debug.LogError($"[DownLoadABFile] {fileName} 下载最终失败，已重试耗尽");
+                            failedFiles.Add(fileName);
+                        }
                     }
-                    await Task.Delay(200);
                 }
-                int size1 = HaveBeenDownLoaded.Count;
-                for (int i = 0; i < size1; i++)
-                {
-                    downLoadList.Remove(HaveBeenDownLoaded[i]);
-                }
-                waitToDownLoadCount = downLoadList.Count;
-                retryCount--;
+            }
 
-                if (waitToDownLoadCount > 0 && retryCount > 0)
-                {
-                    foreach (var file in downLoadList)
-                    {
-                        string path = Path.Combine(_persistentABPath, file);
-                        try { if (File.Exists(path)) File.Delete(path); } catch { }
-                    }
-                    await Task.Delay(300); // 让系统释放句柄
-                }
-            }
-            if (waitToDownLoadCount != 0)
+            if (failedFiles.Count > 0)
             {
-                Debug.Log("有待下载资源未下载完成");
+                Debug.LogError($"[DownLoadABFile] 以下文件下载失败: {string.Join(", ", failedFiles)}");
+                return false;
             }
-            return allSuccess;
+
+            Debug.Log("[DownLoadABFile] 所有文件下载完毕");
+            return true;
         }
         #endregion
         #region Parse解析
@@ -276,14 +273,19 @@ namespace Tool.MyAB
         /// <returns></returns>
         async Task<bool> UpdateFile(string remoteComparePath, string toBeCompared, UnityAction<long, long, float> progressCallback = null)
         {
-            bool DownLoadSuccess = false;
+            Debug.Log("[UpdateFile] 进入方法");
+            var tcs = new TaskCompletionSource<bool>();
+
             await ReadCompareFileContent(remoteComparePath, async (success, remoteContent) =>
             {
                 if (success && !string.IsNullOrEmpty(remoteContent))
                 {
                     bool isRemoteParseSuccess = ParseCompareContent(remoteContent, remoteABInfo);
                     if (!isRemoteParseSuccess)
-                        return;  
+                    {
+                        tcs.SetResult(false);
+                        return;
+                    }
 
                     await ReadCompareFileContent(toBeCompared, async (success, localContent) =>
                     {
@@ -291,7 +293,10 @@ namespace Tool.MyAB
                         {
                             bool isLocalParseSuccess = ParseCompareContent(localContent, localABInfo);
                             if (!isLocalParseSuccess)
+                            {
+                                tcs.SetResult(false);
                                 return;
+                            } 
                             
                             //添加资源到下载列表
                             downLoadList.Clear();
@@ -299,61 +304,66 @@ namespace Tool.MyAB
                             {
                                 if (!localABInfo.ContainsKey(name))
                                 {
+                                    Debug.Log($"[UpdateFile] 添加资源{name}到待下载列表");
                                     downLoadList.Add(name);
                                     totalBytes += remoteABInfo[name].size;
                                 }
                                 else if (localABInfo[name].md5 != remoteABInfo[name].md5)
                                 {
+                                    Debug.Log($"[UpdateFile] 资源{name}发生变化需要更新");
                                     downLoadList.Add(name);
                                     localABInfo.Remove(name);
                                     totalBytes += remoteABInfo[name].size;
                                 }
                             }
-                            CleanObsoleteRes();
+                            
                             //下载更新列表文件
-                            DownLoadSuccess = await DownLoadABFile((downloadedBytes, totalBytes, DownLoadProgress) =>
+                            bool DownLoadSuccess = await DownLoadABFile((downloadedBytes, totalBytes, DownLoadProgress) =>
                             {
                                 progressCallback?.Invoke(downloadedBytes, totalBytes, DownLoadProgress);
                             });
 
                             if (DownLoadSuccess)
                             {
-                                //下载成功，更新对比文件
                                 string persistentCompareFile = Path.Combine(_persistentABPath, _remoteComparePath);
+                                // 加日志 1
+                                Debug.Log($"[UpdateFile] 准备写入对比文件: {persistentCompareFile}，内容长度: {remoteContent?.Length ?? -1}");
+
                                 File.WriteAllText(persistentCompareFile, remoteContent);
-                                File.Delete(remoteComparePath);
+
+                                // 加日志 2
+                                Debug.Log($"[UpdateFile] 对比文件写入完成，验证存在: {File.Exists(persistentCompareFile)}");
+
+                                CleanObsoleteRes();
+
+                                // 加日志 3
+                                Debug.Log($"[UpdateFile] 过时资源已删除");
+                                tcs.SetResult(true);
+                                return;
+                            }
+                            else
+                            {
+                                Debug.LogWarning("[UpdateFile] DownLoadSuccess 为 false，未更新对比文件");
+                                tcs.SetResult(false);
                                 return;
                             }
                         }
                         else
                         {
-                            Debug.LogError("未检测到远端对比文件");
+                            Debug.LogError("[UpdateFile] 未检测到本地对比文件");
+                            tcs.SetResult(false);
                             return;
                         }
                     });
                 }
                 else
                 {
-                    Debug.Log("未检测到远端对比文件,直接加载本地资源");
-                    await ReadCompareFileContent(toBeCompared, (success, localContent) =>
-                    {
-                        if (success)
-                        {
-                            bool isLocalParseSuccess = ParseCompareContent(localContent, localABInfo);
-                            if (isLocalParseSuccess)
-                            {
-                                return;
-                            }
-                        }
-                        else
-                        {
-                            Debug.LogError("加载本地资源出错");
-                            return;
-                        }
-                    });
+                    Debug.Log("[UpdateFile] 未检测到远端对比文件");
+                    tcs.SetResult(false);
+                    return;
                 }
             });
-            return DownLoadSuccess;
+            return await tcs.Task;
         }
         /// <summary>
         /// 读取对比文件内容
@@ -478,7 +488,7 @@ namespace Tool.MyAB
         }
         protected override void OnDestroy()
         {
-            if (IsValidSingleton == this)
+            if (IsValidSingleton)
             {
                 base.OnDestroy();
             }
